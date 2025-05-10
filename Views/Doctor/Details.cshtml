@@ -1,0 +1,129 @@
+@model SimpleDoctor.Models.Doctor
+
+@{
+    ViewData["Title"] = "Doktor Detayları";
+}
+
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            <h2 class="mb-0">@Model.Name</h2>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <dl class="row">
+                        <dt class="col-sm-4">@Html.DisplayNameFor(model => model.Specialty):</dt>
+                        <dd class="col-sm-8">@Model.Specialty</dd>
+
+                        @if (!string.IsNullOrEmpty(Model.SubSpecialty))
+                        {
+                            <dt class="col-sm-4">@Html.DisplayNameFor(model => model.SubSpecialty):</dt>
+                            <dd class="col-sm-8">@Model.SubSpecialty</dd>
+                        }
+
+                        <dt class="col-sm-4">@Html.DisplayNameFor(model => model.GraduationSchool):</dt>
+                        <dd class="col-sm-8">@Model.GraduationSchool</dd>
+
+                        <dt class="col-sm-4">@Html.DisplayNameFor(model => model.GraduationYear):</dt>
+                        <dd class="col-sm-8">@Model.GraduationYear</dd>
+
+                        @if (!string.IsNullOrEmpty(Model.Email))
+                        {
+                            <dt class="col-sm-4">@Html.DisplayNameFor(model => model.Email):</dt>
+                            <dd class="col-sm-8">
+                                <a href="mailto:@Model.Email" class="text-decoration-none">
+                                    <i class="fas fa-envelope"></i> @Model.Email
+                                </a>
+                            </dd>
+                        }
+
+                        @if (!string.IsNullOrEmpty(Model.Phone))
+                        {
+                            <dt class="col-sm-4">@Html.DisplayNameFor(model => model.Phone):</dt>
+                            <dd class="col-sm-8">
+                                <a href="tel:@Model.Phone" class="text-decoration-none">
+                                    <i class="fas fa-phone"></i> @Model.Phone
+                                </a>
+                            </dd>
+                        }
+
+                        @if (!string.IsNullOrEmpty(Model.WorkingHours))
+                        {
+                            <dt class="col-sm-4">@Html.DisplayNameFor(model => model.WorkingHours):</dt>
+                            <dd class="col-sm-8">@Model.WorkingHours</dd>
+                        }
+                    </dl>
+                </div>
+                <div class="col-md-6">
+                    @if (!string.IsNullOrEmpty(Model.Biography))
+                    {
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0">Özgeçmiş</h5>
+                            </div>
+                            <div class="card-body">
+                                <p class="card-text">@Model.Biography</p>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mt-4">
+        <div class="card-header bg-info text-white">
+            <h3 class="mb-0">Randevular</h3>
+        </div>
+        <div class="card-body">
+            @if (Model.Appointments != null && Model.Appointments.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>Hasta Adı</th>
+                                <th>E-posta</th>
+                                <th>Randevu Tarihi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var appointment in Model.Appointments.OrderBy(a => a.AppointmentDate))
+                            {
+                                <tr>
+                                    <td>@appointment.PatientName</td>
+                                    <td>@appointment.PatientEmail</td>
+                                    <td>@appointment.AppointmentDate.ToString("dd.MM.yyyy HH:mm")</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle"></i> Bu doktor için henüz randevu bulunmamaktadır.
+                </div>
+            }
+        </div>
+    </div>
+
+    <div class="mt-4">
+        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">
+            <i class="fas fa-edit"></i> Düzenle
+        </a>
+        <a asp-action="Index" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Listeye Dön
+        </a>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            $('.card').hide().fadeIn(500);
+        });
+    </script>
+} 
